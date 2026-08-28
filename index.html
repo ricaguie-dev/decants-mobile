@@ -227,12 +227,12 @@ input,select,textarea,button{font-size:16px;}
 .m-back-btn{display:none;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:rgba(247,242,234,.1);border:none;color:var(--cream);flex-shrink:0;}
 .m-sync-pill{font-size:10.5px;color:rgba(247,242,234,.55);flex-shrink:0;white-space:nowrap;}
 
-#main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 12px;position:relative;}
+#main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 12px;position:relative;max-width:none;}
 .view{display:none;}
 .view.active{display:block;}
 
 .bottom-tabs{
-  flex-shrink:0;display:flex;background:var(--paper);border-top:1px solid var(--border);
+  flex-shrink:0;flex-grow:0;flex-direction:row;display:flex;background:var(--paper);border-top:1px solid var(--border);
   padding:8px 4px calc(6px + env(safe-area-inset-bottom));
 }
 .tab-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--muted);padding:6px 2px;border-radius:10px;}
