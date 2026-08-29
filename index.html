@@ -1118,10 +1118,10 @@ function renderCarritoSheetContent(){
         <button class="m-chip-lg ${ventaState.metodoPago==='transferencia'?'sel':''}" data-pago="transferencia">Transferencia</button>
       </div>
       ${ventaState.metodoPago==='efectivo' ? `
-      <div class="m-field"><label>Monto recibido</label><input type="number" id="recibidoInput" min="0" step="1" placeholder="0.00" value="${ventaState.recibido}"></div>
-      <div class="m-row"><span class="muted">Cambio</span><span class="num" style="font-weight:700;color:var(--success);font-size:17px;">${money(cambio)}</span></div>
+      <div class="m-field"><label>Monto recibido</label><input type="number" inputmode="decimal" id="recibidoInput" min="0" step="1" placeholder="0.00" value="${ventaState.recibido}"></div>
+      <div class="m-row"><span class="muted">Cambio</span><span class="num" id="cambioValue" style="font-weight:700;color:var(--success);font-size:17px;">${money(cambio)}</span></div>
       ` : ''}
-      ${warn}
+      <div id="warnBox">${warn}</div>
       <button class="m-btn-primary" id="btnConfirmarVenta" style="width:100%;margin-top:10px;" ${((ventaState.metodoPago==='efectivo' && !alcanza) || total<=0)?'disabled':''}>Confirmar venta</button>
     </div>
   `);
@@ -1131,7 +1131,16 @@ function renderCarritoSheetContent(){
     btn.onclick = ()=>{ ventaState.metodoPago = btn.dataset.pago; renderCarritoSheetContent(); };
   });
   const recibidoInput = document.getElementById('recibidoInput');
-  if(recibidoInput) recibidoInput.oninput = (e)=>{ ventaState.recibido = e.target.value; renderCarritoSheetContent(); };
+  if(recibidoInput) recibidoInput.oninput = (e)=>{
+    ventaState.recibido = e.target.value;
+    const c = calcularCarrito();
+    const cambioEl = document.getElementById('cambioValue');
+    if(cambioEl) cambioEl.textContent = money(c.cambio);
+    const warnBox = document.getElementById('warnBox');
+    if(warnBox) warnBox.innerHTML = (ventaState.metodoPago==='efectivo' && !c.alcanza && c.recibido>0) ? `<div class="m-banner-danger">${svgIcon('alert',16)} El monto recibido no cubre el total.</div>` : '';
+    const btn = document.getElementById('btnConfirmarVenta');
+    if(btn) btn.disabled = (ventaState.metodoPago==='efectivo' && !c.alcanza) || c.total<=0;
+  };
   const btnConfirmar = document.getElementById('btnConfirmarVenta');
   if(btnConfirmar) btnConfirmar.onclick = ()=>{ confirmarVenta(); closeSheet(); };
 }
